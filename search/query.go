@@ -7,13 +7,6 @@ import (
 	"reflect"
 )
 
-// types for marshaling
-var stringType = reflect.TypeOf("")
-var intType = reflect.TypeOf(0)
-var boolType = reflect.TypeOf(true)
-var sslVersionType = reflect.TypeOf((*ssl_versions.SSLVersion)(nil)).Elem()
-var linkTypeType = reflect.TypeOf((*link_types.LinkType)(nil)).Elem()
-
 type Query struct {
 	// Raw query text. You can use only this field, if you want to
 	Text string
@@ -217,7 +210,7 @@ func (s *Query) String() string {
 
 func marshalQueryParamField(typeField reflect.StructField, valueField reflect.Value, tag string) string {
 	switch typeField.Type {
-	case stringType, sslVersionType, linkTypeType:
+	case stringType, sslVersionType, linkTypeType, explotTypeType:
 		value := valueField.String()
 		if value != "" {
 			return fmt.Sprintf("%s:%s ", tag, value)

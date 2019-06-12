@@ -69,3 +69,24 @@ func (h *HostParams) ToURLValues() url.Values {
 	}
 	return result
 }
+
+type ExploitParams struct {
+	Query  ExploitsQuery
+	Facets []string
+	Page   int
+}
+
+func (p *ExploitParams) ToURLValues() url.Values {
+	values := make(url.Values)
+	values.Add("query", p.Query.String())
+
+	if len(p.Facets) > 0 {
+		values.Add("facets", strings.Join(p.Facets, ","))
+	}
+
+	if p.Page > 1 {
+		values.Add("page", fmt.Sprint(p.Page))
+	}
+
+	return values
+}

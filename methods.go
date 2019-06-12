@@ -11,7 +11,6 @@ import (
 	"github.com/shadowscatcher/shodan/search"
 	"net/http"
 	"net/url"
-
 	"strings"
 )
 
@@ -450,5 +449,29 @@ func (c *Client) DeleteTriggerIgnore(ctx context.Context, alertId, triggerName, 
 
 	route := fmt.Sprintf(routes.ShodanAlertTriggerNotificationAction, alertId, triggerName, service)
 	err = c.request(ctx, http.MethodDelete, route, nil, nil, nil, &result)
+	return
+}
+
+// Search across a variety of data sources for exploits and use facets to get summary information
+func (c *Client) ExploitSearch(ctx context.Context, params search.ExploitParams) (result models.ExploitResult, err error) {
+	values := params.ToURLValues()
+	if len(values) == 0 {
+		err = emptyParams
+		return
+	}
+
+	err = c.requestExploits(ctx, http.MethodGet, routes.Search, values, nil, nil, &result)
+	return
+}
+
+// This method behaves identical to the "/search" method with the difference that it doesn't return any results
+func (c *Client) ExploitCount(ctx context.Context, params search.ExploitParams) (result models.ExploitResult, err error) {
+	values := params.ToURLValues()
+	if len(values) == 0 {
+		err = emptyParams
+		return
+	}
+
+	err = c.requestExploits(ctx, http.MethodGet, routes.Count, values, nil, nil, &result)
 	return
 }

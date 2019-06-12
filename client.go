@@ -177,6 +177,21 @@ func (c *Client) readResponse(to interface{}, body io.Reader) error {
 	return err
 }
 
+func (c *Client) requestAndRead(ctx context.Context, req *http.Request, result interface{}) (err error) {
+	response, err := c.do(ctx, req)
+	if err != nil {
+		return
+	}
+
+	if response.StatusCode != http.StatusOK {
+		err = errFromResponse(response)
+		return
+	}
+
+	err = c.readResponse(result, response.Body)
+	return
+}
+
 // composes request and proceeds with it; Unmarshals results
 func (c *Client) request(
 	ctx context.Context,
@@ -191,17 +206,24 @@ func (c *Client) request(
 		return
 	}
 
-	response, err := c.do(ctx, req)
+	err = c.requestAndRead(ctx, req, result)
+	return
+}
+
+func (c *Client) requestExploits(
+	ctx context.Context,
+	method, route string,
+	params url.Values,
+	body io.Reader,
+	header http.Header,
+	result interface{}) (err error) {
+
+	req, err := c.createExploitRequest(ctx, method, route, params, body, header)
 	if err != nil {
 		return
 	}
 
-	if response.StatusCode != http.StatusOK {
-		err = errFromResponse(response)
-		return
-	}
-
-	err = c.readResponse(result, response.Body)
+	err = c.requestAndRead(ctx, req, result)
 	return
 }
 

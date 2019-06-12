@@ -62,6 +62,3 @@ for _, match := range result.Matches {
 ```
 
  - The client can be configured to automatically make one second pause between requests (this interval is required by Shodan's API terms of service).
- 
- ## Not yet implemented
-  - Exploits and streaming API.  

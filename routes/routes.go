@@ -40,4 +40,11 @@ const (
 	ToolsMyIP                            = "/tools/myip"
 	ApiInfo                              = "/api-info"
 	LabsHoneyscore                       = "/labs/honeyscore/%s"
+
+	// stream API routes
+	ShodanBanners   = "/shodan/banners"
+	ShodanAsn       = "/shodan/asn/%s"
+	ShodanCountries = "/shodan/countries/%s"
+	ShodanPortsList = "/shodan/ports/%s"
+	ShodanAlerts    = "/shodan/alerts"
 )

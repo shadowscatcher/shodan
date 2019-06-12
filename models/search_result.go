@@ -7,6 +7,12 @@ type SearchResult struct {
 	Facets  map[string][]Facet `json:"facets,omitempty"`
 }
 
+type ExploitResult struct {
+	Matches []Exploit          `json:"matches"`
+	Total   int                `json:"total"`
+	Facets  map[string][]Facet `json:"facets,omitempty"`
+}
+
 type Facet struct {
 	Count int         `json:"count"`
 	Value interface{} `json:"value"`
