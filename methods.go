@@ -363,7 +363,7 @@ func (c *Client) DeleteAlert(ctx context.Context, alertId string) (result interf
 }
 
 // Returns a listing of all the network alerts that are currently active on the account
-func (c *Client) ListAlerts(ctx context.Context) (result []models.Alert, err error) {
+func (c *Client) ListAlerts(ctx context.Context) (result []models.AlertDetails, err error) {
 	err = c.get(ctx, routes.ShodanAlertInfo, nil, &result)
 	return
 }
