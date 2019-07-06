@@ -297,6 +297,12 @@ func (c *Client) DnsReverse(ctx context.Context, ips []string) (result map[strin
 	return
 }
 
+func (c *Client) DnsDomain(ctx context.Context, domain string) (result models.Domain, err error) {
+	route := fmt.Sprintf(routes.DnsDomain, domain)
+	err = c.get(ctx, route, nil, &result)
+	return
+}
+
 // Shows the HTTP headers that your client sends when connecting to a webserver
 func (c *Client) HttpHeaders(ctx context.Context) (result map[string]string, err error) {
 	err = c.get(ctx, routes.ToolsHTTPHeaders, nil, &result)

@@ -36,6 +36,7 @@ const (
 	AccountProfile                       = "/account/profile"
 	DnsResolve                           = "/dns/resolve"
 	DnsReverse                           = "/dns/reverse"
+	DnsDomain                            = "/dns/domain/%s"
 	ToolsHTTPHeaders                     = "/tools/httpheaders"
 	ToolsMyIP                            = "/tools/myip"
 	ApiInfo                              = "/api-info"
