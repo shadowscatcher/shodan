@@ -73,7 +73,7 @@ type Tokens struct {
 	Attributes map[string][]interface{} `json:"attributes"`
 	Errors     []string                 `json:"errors"`
 	String     string                   `json:"string"`
-	Filters    []string
+	Filters    []string                 `json:"filters"`
 }
 
 // List of the saved search queries
