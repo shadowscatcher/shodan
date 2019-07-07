@@ -161,7 +161,10 @@ func (c *Client) ScanInternet(ctx context.Context, port uint16, protocol string)
 	return
 }
 
-// Use this method to obtain a list of search queries that users have saved in Shodan
+// Use this method to obtain a list of search queries that users have saved in Shodan.
+// page (optional): Page number to iterate over results; each page contains 10 items.
+// sort (optional): Sort the list based on a property. Possible values are: votes, timestamp.
+// order (optional): Whether to sort the list in ascending or descending order. Possible values are: asc, desc.
 func (c *Client) QueryList(ctx context.Context, page uint, sort, order string) (result models.SearchQueries, err error) {
 	params := make(url.Values)
 
@@ -171,6 +174,10 @@ func (c *Client) QueryList(ctx context.Context, page uint, sort, order string) (
 
 	if sort != "" {
 		params.Set("sort", sort)
+	}
+
+	if order != "" {
+		params.Set("order", order)
 	}
 
 	err = c.get(ctx, routes.ShodanQuery, params, &result)
