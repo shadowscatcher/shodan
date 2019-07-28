@@ -32,4 +32,7 @@ type HostInfo struct {
 
 	// List of tags that describe the characteristics of the device
 	Tags []string `json:"tags,omitempty"`
+
+	// Raw HTML of response
+	HTML string `json:"html,omitempty"`
 }

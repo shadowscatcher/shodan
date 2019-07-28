@@ -23,5 +23,8 @@ type CrawlerOptions struct {
 	Hostname string `json:"hostname,omitempty"`
 
 	// ID of the banner that triggered the scan for this port
-	Referer string `json:"referer,omitempty"`
+	Referrer string `json:"referrer,omitempty"`
+
+	// ID of the scan
+	Scan string `json:"scan,omitempty"`
 }

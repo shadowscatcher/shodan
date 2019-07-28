@@ -17,11 +17,21 @@ type NTP struct {
 	// Full version information
 	Version interface{} `json:"version"`
 
+	RefId       string      `json:"refid"`
+	State       int         `json:"state"`
 	Clock       string      `json:"clock,omitempty"`
 	ClockOffset float64     `json:"clock_offset"`
 	Delay       float64     `json:"delay"`
+	MinTC       int         `json:"mintc,omitempty"`
+	TC          int         `json:"tc,omitempty"`
+	Peer        uint64      `json:"peer,omitempty"`
+	Processor   string      `json:"processor,omitempty"`
 	Frequency   interface{} `json:"frequency,omitempty"`
 	Jitter      float64     `json:"jitter,omitempty"`
+	SysJitter   interface{} `json:"sys_jitter,omitempty"`
+	ClkJitter   interface{} `json:"clk_jitter,omitempty"`
+	ClkWander   interface{} `json:"clk_wander,omitempty"`
+	Phase       interface{} `json:"phase"`
 	Leap        int         `json:"leap"`
 	Noise       float64     `json:"noise,omitempty"`
 	Offset      interface{} `json:"offset,omitempty"`

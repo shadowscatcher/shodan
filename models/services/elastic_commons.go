@@ -22,6 +22,6 @@ type ElasticProcess struct {
 	MaxFileDescriptors      int                        `json:"max_file_descriptors,omitempty"`
 	Mlockall                bool                       `json:"mlockall"`
 	RefreshIntervalInMillis int                        `json:"refresh_interval_in_millis"`
-	CPU                     ElasticCPULoad             `json:"elasticCPUdata"`
+	CPU                     ElasticCPULoad             `json:"cpu,omitempty"`
 	OpenFileDescriptors     ElasticOpenFileDescriptors `json:"open_file_descriptors,omitempty"`
 }

@@ -58,14 +58,19 @@ type ApiInfo struct {
 
 // Result of request to "/org" endpoint
 type Org struct {
-	Id          string            `json:"id"`
-	Name        string            `json:"name"`
-	Created     string            `json:"created"`
-	Admins      map[string]string `json:"admins"`
-	Members     []interface{}     `json:"members"`
-	UpgradeType string            `json:"upgrade_type"`
-	Domains     []string          `json:"domains"`
-	Logo        interface{}       `json:"logo"`
+	Id          string      `json:"id"`
+	Name        string      `json:"name"`
+	Created     string      `json:"created"`
+	Admins      []OrgMember `json:"admins"`
+	Members     []OrgMember `json:"members"`
+	UpgradeType string      `json:"upgrade_type"`
+	Domains     []string    `json:"domains"`
+	Logo        interface{} `json:"logo"`
+}
+
+type OrgMember struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 // Search query broken into tokens

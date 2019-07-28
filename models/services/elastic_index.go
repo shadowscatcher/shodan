@@ -166,7 +166,7 @@ type ElasticOpenFileDescriptors struct {
 type ElasticOS struct {
 	AllocatedProcessors int                 `json:"allocated_processors,omitempty"`
 	AvailableProcessors int                 `json:"available_processors"`
-	CPU                 []ElasticCpuItem    `json:"elasticCPUdata,omitempty"`
+	CPU                 []ElasticCpuItem    `json:"cpu,omitempty"`
 	Mem                 ElasticOsMem        `json:"mem"`
 	Names               []ElasticOSname     `json:"names,omitempty"`
 	PrettyNames         []ElasticPrettyName `json:"pretty_names,omitempty"`
