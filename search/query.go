@@ -129,6 +129,17 @@ type CertOptions struct {
 
 	// Serial number as string
 	Serial string `shodan_search:"serial"`
+
+	// Cert issuer options
+	Issuer CertEntity `shodan_search:"issuer"`
+
+	// Cert subject options
+	Subject CertEntity `shodan_search:"subject"`
+}
+
+type CertEntity struct {
+	// Common name
+	CN string `shodan_search:"cn"`
 }
 
 type Bitcoin struct {
