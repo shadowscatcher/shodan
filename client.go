@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	"github.com/shadowscatcher/shodan/models"
+	"github.com/shadowscatcher/shodan/routes"
 
 	"sync"
 	"time"
@@ -18,6 +19,7 @@ import (
 
 const intSecond = int64(time.Second)
 
+// Client is a type with all non-stream methods. Use GetClient to create instance
 type Client struct {
 	apiKey          string
 	waitFunc        func(*Client)
@@ -35,7 +37,8 @@ func waitASecond(client *Client) {
 	}
 }
 
-// wait: tell client to wait 1 second between requests (see API Terms of Service).
+// GetClient creates Client instance. apiKey is required to work with API. If you want to use a proxy, configure http.Client.
+// If you need to disable throttling, set wait to false
 func GetClient(apiKey string, client *http.Client, wait bool) (*Client, error) {
 	if apiKey == "" {
 		return nil, errors.New("empty API key")
@@ -95,7 +98,7 @@ func errFromResponse(response *http.Response) error {
 	var errResp models.Error
 	content, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return errors.New(fmt.Sprintf("can't read error response body: %s", err.Error()))
+		return fmt.Errorf("can't read error response body: %s", err)
 	}
 
 	err = json.Unmarshal(content, &errResp)

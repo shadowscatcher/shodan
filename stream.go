@@ -7,21 +7,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"sync"
+
+	"github.com/shadowscatcher/shodan/models"
+	"github.com/shadowscatcher/shodan/routes"
 )
 
+// StreamClient is a client with all stream-related methods. Use GetStreamClient to create instance
 type StreamClient struct {
 	apiKey string
 	mu     *sync.Mutex
 	HTTP   *http.Client
 }
 
+// GetStreamClient creates StreamClient instance. If you want to use a proxy, configure http.Client.
 func GetStreamClient(key string, client *http.Client) (*StreamClient, error) {
 	if key == "" {
 		return nil, errors.New("empty API key")
@@ -36,6 +39,66 @@ func GetStreamClient(key string, client *http.Client) (*StreamClient, error) {
 		mu:     &sync.Mutex{},
 		HTTP:   client,
 	}, nil
+}
+
+// Banners stream provides ALL of the data that Shodan collects. Use this stream if you need access to everything and/or
+// want to store your own Shodan database locally. If you only care about specific ports, please use the Ports stream
+func (s *StreamClient) Banners(ctx context.Context) (chan models.Service, error) {
+	return s.subscribe(ctx, routes.ShodanBanners)
+}
+
+// ASN stream provides a filtered, bandwidth-saving view of the Banners stream in case you are only interested in
+// devices located in certain ASNs
+func (s *StreamClient) ASN(ctx context.Context, asns []string) (chan models.Service, error) {
+	if asns == nil || len(asns) == 0 {
+		return nil, errors.New("asns are required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanAsn, strings.Join(asns, ","))
+	return s.subscribe(ctx, route)
+}
+
+// Countries stream provides a filtered, bandwidth-saving view of the Banners stream in case you are only interested in
+// devices located in certain countries
+func (s *StreamClient) Countries(ctx context.Context, countries []string) (chan models.Service, error) {
+	if countries == nil || len(countries) == 0 {
+		return nil, errors.New("countries are required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanCountries, strings.Join(countries, ","))
+	return s.subscribe(ctx, route)
+}
+
+// Ports stream only returns banner data for the list of specified ports. This stream provides a filtered, bandwidth-saving view of
+// the Banners stream in case you are only interested in a specific list of ports.
+func (s *StreamClient) Ports(ctx context.Context, ports []int) (chan models.Service, error) {
+	if ports == nil || len(ports) == 0 {
+		return nil, errors.New("ports are required")
+	}
+
+	portList := make([]string, len(ports), len(ports))
+
+	for i, port := range ports {
+		portList[i] = fmt.Sprint(port)
+	}
+
+	route := fmt.Sprintf(routes.ShodanPortsList, strings.Join(portList, ","))
+	return s.subscribe(ctx, route)
+}
+
+// Alerts stream allows to subscribe to banners discovered on all IP ranges described in the network alert
+func (s *StreamClient) Alerts(ctx context.Context) (chan models.Service, error) {
+	return s.subscribe(ctx, routes.ShodanAlerts)
+}
+
+// Alert stream allows to subscribe to banners discovered on the IP range defined in a specific network alert
+func (s *StreamClient) Alert(ctx context.Context, alertID string) (chan models.Service, error) {
+	if alertID == "" {
+		return nil, errors.New("alertID is required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanAlertId, alertID)
+	return s.subscribe(ctx, route)
 }
 
 func (s *StreamClient) defaultParams() url.Values {
@@ -60,8 +123,8 @@ func (s *StreamClient) createRequest(
 }
 
 func (s *StreamClient) makeRequest(ctx context.Context, route string) (response *http.Response, err error) {
-	fullUrl := routes.ApiStream + route
-	uri, err := url.Parse(fullUrl)
+	fullURL := routes.ApiStream + route
+	uri, err := url.Parse(fullURL)
 
 	if err != nil {
 		return
@@ -116,48 +179,4 @@ func (s *StreamClient) subscribe(ctx context.Context, route string) (chan models
 	}(resultChan, response.Body)
 
 	return resultChan, nil
-}
-
-// This stream provides ALL of the data that Shodan collects. Use this stream if you need access to everything and/or
-// want to store your own Shodan database locally. If you only care about specific ports, please use the Ports stream
-func (s *StreamClient) Banners(ctx context.Context) (chan models.Service, error) {
-	return s.subscribe(ctx, routes.ShodanBanners)
-}
-
-// This stream provides a filtered, bandwidth-saving view of the Banners stream in case you are only interested in
-// devices located in certain ASNs
-func (s *StreamClient) ASN(ctx context.Context, asns []string) (chan models.Service, error) {
-	route := fmt.Sprintf(routes.ShodanAsn, strings.Join(asns, ","))
-	return s.subscribe(ctx, route)
-}
-
-// This stream provides a filtered, bandwidth-saving view of the Banners stream in case you are only interested in
-// devices located in certain countries
-func (s *StreamClient) Countries(ctx context.Context, countries []string) (chan models.Service, error) {
-	route := fmt.Sprintf(routes.ShodanCountries, strings.Join(countries, ","))
-	return s.subscribe(ctx, route)
-}
-
-// Only returns banner data for the list of specified ports. This stream provides a filtered, bandwidth-saving view of
-// the Banners stream in case you are only interested in a specific list of ports.
-func (s *StreamClient) Ports(ctx context.Context, ports []int) (chan models.Service, error) {
-	portList := make([]string, len(ports), len(ports))
-
-	for i, port := range ports {
-		portList[i] = fmt.Sprint(port)
-	}
-
-	route := fmt.Sprintf(routes.ShodanPortsList, strings.Join(portList, ","))
-	return s.subscribe(ctx, route)
-}
-
-// Subscribe to banners discovered on all IP ranges described in the network alert
-func (s *StreamClient) Alerts(ctx context.Context) (chan models.Service, error) {
-	return s.subscribe(ctx, routes.ShodanAlerts)
-}
-
-// Subscribe to banners discovered on the IP range defined in a specific network alert
-func (s *StreamClient) Alert(ctx context.Context, alertId string) (chan models.Service, error) {
-	route := fmt.Sprintf(routes.ShodanAlertId, alertId)
-	return s.subscribe(ctx, route)
 }
