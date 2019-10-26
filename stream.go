@@ -101,6 +101,15 @@ func (s *StreamClient) Alert(ctx context.Context, alertID string) (chan models.S
 	return s.subscribe(ctx, route)
 }
 
+func (s *StreamClient) Tags(ctx context.Context, tags []string) (chan models.Service, error) {
+	if tags == nil || len(tags) == 0 {
+		return nil, errors.New("tags are required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanTagsId, strings.Join(tags, ","))
+	return s.subscribe(ctx, route)
+}
+
 func (s *StreamClient) defaultParams() url.Values {
 	params := make(url.Values)
 	params.Set("key", s.apiKey)

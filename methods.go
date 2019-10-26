@@ -158,7 +158,7 @@ func (c *Client) ScanInternet(ctx context.Context, port uint16, protocol string)
 	header := make(http.Header)
 	header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	err = c.request(ctx, http.MethodPost, routes.ShodanScanInternet, nil, body, header, result)
+	err = c.request(ctx, http.MethodPost, routes.ShodanScanInternet, nil, body, header, &result)
 	return
 }
 
@@ -352,7 +352,6 @@ func (c *Client) Honeyscore(ctx context.Context, ip string) (result float32, err
 // to changes/events that are discovered within that range
 func (c *Client) CreateAlert(ctx context.Context, alert models.Alert) (result models.AlertDetails, err error) {
 	body, err := json.Marshal(alert)
-	fmt.Println(string(body))
 	if err != nil {
 		return
 	}
@@ -361,6 +360,36 @@ func (c *Client) CreateAlert(ctx context.Context, alert models.Alert) (result mo
 	header.Set("Content-Type", "application/json")
 
 	err = c.request(ctx, http.MethodPost, routes.ShodanAlert, nil, bytes.NewReader(body), header, &result)
+	return
+}
+
+// EditAlert allows to edit the IPs that should be monitored by the alert
+func (c *Client) EditAlert(ctx context.Context, alertID string, filter models.Filter) (result models.AlertDetails, err error) {
+	if alertID == "" {
+		err = errEmptyAlertID
+		return
+	}
+
+	if filter.IP == nil || len(filter.IP) == 0 {
+		err = errors.New("filter IPs are required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanAlertId, alertID)
+
+	body, err := json.Marshal(struct {
+		Filters models.Filter `json:"filters"`
+	}{
+		Filters: filter,
+	})
+
+	if err != nil {
+		return
+	}
+
+	header := make(http.Header)
+	header.Set("Content-Type", "application/json")
+
+	err = c.request(ctx, http.MethodPost, route, nil, bytes.NewReader(body), header, &result)
 	return
 }
 
@@ -499,5 +528,88 @@ func (c *Client) ExploitCount(ctx context.Context, params search.ExploitParams) 
 	}
 
 	err = c.requestExploits(ctx, http.MethodGet, routes.Count, values, nil, nil, &result)
+	return
+}
+
+// ListNotifierProviders returns a collection of required fields for all existing notifier provider types
+func (c *Client) ListNotifierProviders(ctx context.Context) (result map[models.NotifierProviderType]models.ProviderRequirements, err error) {
+	err = c.get(ctx, routes.NotifierProvider, nil, &result)
+	return
+}
+
+// ListNotifiers returns a collection of registered notifiers
+func (c *Client) ListNotifiers(ctx context.Context) (result models.NotifierList, err error) {
+	err = c.get(ctx, routes.Notifier, nil, &result)
+	return
+}
+
+// CreateNotifier creates a notifier for alert triggers. Use one of models.Create*Provider functions to easily create
+// required provider type for your personal notifications feed.
+func (c *Client) CreateNotifier(ctx context.Context, provider models.NotifierProvider) (result models.NotifierResponse, err error) {
+	body := provider.ToRequestBody()
+	header := make(http.Header)
+	header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	err = c.request(ctx, http.MethodPost, routes.Notifier, nil, body, header, &result)
+	return
+}
+
+// GetNotifier returns registered notifier descriptor by notifier ID
+func (c *Client) GetNotifier(ctx context.Context, notifierID string) (result models.NotifierDescriptor, err error) {
+	route := fmt.Sprintf(routes.NotifierId, notifierID)
+	err = c.get(ctx, route, nil, &result)
+	return
+}
+
+// EditNotifier allows to change existing notifier provider
+func (c *Client) EditNotifier(ctx context.Context, notifierID string, provider models.NotifierProvider) (result models.SimpleResponse, err error) {
+	route := fmt.Sprintf(routes.NotifierId, notifierID)
+
+	body := provider.ToRequestBody()
+	header := make(http.Header)
+	header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	err = c.request(ctx, http.MethodPut, route, nil, body, header, &result)
+	return
+}
+
+// DeleteNotifier uses notifier ID to delete it from registered list
+func (c *Client) DeleteNotifier(ctx context.Context, notifierID string) (result models.SimpleResponse, err error) {
+	route := fmt.Sprintf(routes.NotifierId, notifierID)
+	err = c.request(ctx, http.MethodDelete, route, nil, nil, nil, &result)
+	return
+}
+
+// AddAlertNotifier enables the given notifier for an alert that has triggers enabled
+func (c *Client) AddAlertNotifier(ctx context.Context, alertID, notifierID string) (result models.SimpleResponse, err error) {
+	if alertID == "" {
+		err = errEmptyAlertID
+		return
+	}
+
+	if notifierID == "" {
+		err = errors.New("notifierID is required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanAlertNotifierId, alertID, notifierID)
+
+	err = c.request(ctx, http.MethodPut, route, nil, nil, nil, &result)
+	return
+}
+
+// DeleteAlertNotifier removes the given notifier for an alert that has triggers enabled
+func (c *Client) DeleteAlertNotifier(ctx context.Context, alertID, notifierID string) (result models.SimpleResponse, err error) {
+	if alertID == "" {
+		err = errEmptyAlertID
+		return
+	}
+
+	if notifierID == "" {
+		err = errors.New("notifierID is required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanAlertNotifierId, alertID, notifierID)
+
+	err = c.request(ctx, http.MethodDelete, route, nil, nil, nil, &result)
 	return
 }

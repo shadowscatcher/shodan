@@ -22,9 +22,11 @@ const (
 	ShodanQuery                          = "/shodan/query"
 	ShodanQuerySearch                    = "/shodan/query/search"
 	ShodanQueryTags                      = "/shodan/query/tags"
+	ShodanTagsId                         = "/shodan/tags/%s"
 	ShodanAlert                          = "/shodan/alert"
 	ShodanAlertInfo                      = "/shodan/alert/info"
 	ShodanAlertId                        = "/shodan/alert/%s"
+	ShodanAlertNotifierId                = "/shodan/alert/%s/notifier/%s"
 	ShodanAlertIdInfo                    = "/shodan/alert/%s/info"
 	ShodanAlertTriggers                  = "/shodan/alert/triggers"                // Return a list of available triggers that can be enabled for alerts
 	ShodanAlertTriggerAction             = "/shodan/alert/%s/trigger/%s"           // Enable/disable the given trigger on the alert (HTTP put/delete) [alertId, trigger]
@@ -48,4 +50,9 @@ const (
 	ShodanCountries = "/shodan/countries/%s"
 	ShodanPortsList = "/shodan/ports/%s"
 	ShodanAlerts    = "/shodan/alerts"
+
+	// notifier API routes
+	Notifier         = "/notifier"
+	NotifierId       = "/notifier/%s"
+	NotifierProvider = "/notifier/provider"
 )

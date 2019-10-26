@@ -124,16 +124,23 @@ type DatasetFile struct {
 	Size      int    `json:"size"`
 }
 
-// Alert filter
+// An object specifying the criteria that an alert should trigger. The only supported option at the moment is the "ip" filter
 type Filter struct {
+
+	// A list of IPs or network ranges defined using CIDR notation
 	IP []string `json:"ip"`
 }
 
 // Alert on network events
 type Alert struct {
-	Name    string `json:"name"`
-	Filter  Filter `json:"filters"`
-	Expires *uint  `json:"expires,omitempty"`
+	// The name to describe the network alert
+	Name string `json:"name"`
+
+	// An object specifying the criteria that an alert should trigger. The only supported option at the moment is the "ip" filter
+	Filter Filter `json:"filters"`
+
+	// Number of seconds that the alert should be active
+	Expires *uint `json:"expires,omitempty"`
 }
 
 // information about a specific network alert
@@ -150,6 +157,7 @@ type AlertDetails struct {
 	} `json:"triggers"`
 }
 
+// Trigger is an alert trigger - when it fires, a notification about event is sent
 type Trigger struct {
 	Name        string `json:"name"`
 	Rule        string `json:"rule"`
