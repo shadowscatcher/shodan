@@ -73,7 +73,7 @@ func (c *Client) defaultParams() url.Values {
 }
 
 // performs actual request to Shodan; waits request timeout, if client is instructed to do so
-func (c *Client) do(context context.Context, r *http.Request) (response *http.Response, err error) {
+func (c *Client) do(r *http.Request) (response *http.Response, err error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -131,7 +131,11 @@ func (c *Client) createRequest(
 		req.Header = header
 	}
 
-	return req.WithContext(ctx), nil
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
 }
 
 // creates HTTP request for root api (https://api.shodan.io) method
@@ -180,8 +184,8 @@ func (c *Client) readResponse(to interface{}, body io.Reader) error {
 	return err
 }
 
-func (c *Client) requestAndRead(ctx context.Context, req *http.Request, result interface{}) (err error) {
-	response, err := c.do(ctx, req)
+func (c *Client) requestAndRead(req *http.Request, result interface{}) (err error) {
+	response, err := c.do(req)
 	if err != nil {
 		return
 	}
@@ -209,7 +213,7 @@ func (c *Client) request(
 		return
 	}
 
-	err = c.requestAndRead(ctx, req, result)
+	err = c.requestAndRead(req, result)
 	return
 }
 
@@ -226,7 +230,7 @@ func (c *Client) requestExploits(
 		return
 	}
 
-	err = c.requestAndRead(ctx, req, result)
+	err = c.requestAndRead(req, result)
 	return
 }
 

@@ -128,7 +128,11 @@ func (s *StreamClient) createRequest(
 		return nil, err
 	}
 
-	return req.WithContext(ctx), nil
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
 }
 
 func (s *StreamClient) makeRequest(ctx context.Context, route string) (response *http.Response, err error) {
