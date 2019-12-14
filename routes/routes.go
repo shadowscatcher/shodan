@@ -15,6 +15,8 @@ const (
 	ShodanPorts                          = "/shodan/ports"
 	ShodanServices                       = "/shodan/services"
 	ShodanProtocols                      = "/shodan/protocols"
+	ShodanFilters                        = "/shodan/filters"
+	ShodanFacets                         = "/shodan/facets"
 	ShodanScan                           = "/shodan/scan"
 	ShodanScans                          = "/shodan/scans"
 	ShodanScanView                       = "/shodan/scan/%s"
