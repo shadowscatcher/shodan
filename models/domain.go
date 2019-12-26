@@ -8,7 +8,9 @@ type NsRecord struct {
 }
 
 type Domain struct {
-	Domain string     `json:"domain"`
-	Tags   []string   `json:"tags"`
-	Data   []NsRecord `json:"data"`
+	More       bool       `json:"more"`
+	Domain     string     `json:"domain"`
+	Tags       []string   `json:"tags"`
+	Data       []NsRecord `json:"data"`
+	Subdomains []string   `json:"subdomains"`
 }

@@ -320,13 +320,23 @@ func (c *Client) DnsReverse(ctx context.Context, ips []string) (result map[strin
 }
 
 // DnsDomain returns a collection of historical NS records for domain
-func (c *Client) DnsDomain(ctx context.Context, domain string) (result models.Domain, err error) {
-	if domain == "" {
+func (c *Client) DnsDomain(ctx context.Context, query search.DomainQuery) (result models.Domain, err error) {
+	if query.Domain == "" {
 		err = errors.New("domain is required")
 		return
 	}
-	route := fmt.Sprintf(routes.DnsDomain, domain)
-	err = c.get(ctx, route, nil, &result)
+	params := make(url.Values)
+
+	if query.History {
+		params.Set("history", "true")
+	}
+
+	if query.RecordType != "" {
+		params.Set("type", query.RecordType)
+	}
+
+	route := fmt.Sprintf(routes.DnsDomain, query.Domain)
+	err = c.get(ctx, route, params, &result)
 	return
 }
 
