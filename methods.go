@@ -335,6 +335,10 @@ func (c *Client) DnsDomain(ctx context.Context, query search.DomainQuery) (resul
 		params.Set("type", query.RecordType)
 	}
 
+	if query.Page > 1 {
+		params.Set("page", fmt.Sprint(query.Page))
+	}
+
 	route := fmt.Sprintf(routes.DnsDomain, query.Domain)
 	err = c.get(ctx, route, params, &result)
 	return
