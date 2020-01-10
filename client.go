@@ -190,6 +190,10 @@ func (c *Client) requestAndRead(req *http.Request, result interface{}) (err erro
 		return
 	}
 
+	defer func() {
+		_ = response.Body.Close()
+	}()
+
 	if response.StatusCode != http.StatusOK {
 		err = errFromResponse(response)
 		return
