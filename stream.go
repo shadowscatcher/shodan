@@ -7,21 +7,20 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/shadowscatcher/shodan/models"
+	"github.com/shadowscatcher/shodan/routes"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
-
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
 )
 
 // StreamClient is a client with all stream-related methods. Use GetStreamClient to create instance
 type StreamClient struct {
 	apiKey string
-	mu     *sync.Mutex
 	HTTP   *http.Client
+	// StreamResponseHook allows you to intercept response before stream reading. If it returns an error, method exits
+	ResponseHook func(response *http.Response, err error) error
 }
 
 // GetStreamClient creates StreamClient instance. If you want to use a proxy, configure http.Client.
@@ -35,9 +34,9 @@ func GetStreamClient(key string, client *http.Client) (*StreamClient, error) {
 	}
 
 	return &StreamClient{
-		apiKey: key,
-		mu:     &sync.Mutex{},
-		HTTP:   client,
+		apiKey:       key,
+		HTTP:         client,
+		ResponseHook: defaultResponseHook,
 	}, nil
 }
 
@@ -101,12 +100,23 @@ func (s *StreamClient) Alert(ctx context.Context, alertID string) (chan models.S
 	return s.subscribe(ctx, route)
 }
 
+// Tags is a filtered version of the "banners" stream to only return banners that match the tags of interest
 func (s *StreamClient) Tags(ctx context.Context, tags []string) (chan models.Service, error) {
 	if tags == nil || len(tags) == 0 {
 		return nil, errors.New("tags are required")
 	}
 
-	route := fmt.Sprintf(routes.ShodanTagsId, strings.Join(tags, ","))
+	route := fmt.Sprintf(routes.ShodanTags, strings.Join(tags, ","))
+	return s.subscribe(ctx, route)
+}
+
+// Vulns is a filtered version of the "banners" stream to only return banners that match the vulnerabilities of interest
+func (s *StreamClient) Vulns(ctx context.Context, vulns []string) (chan models.Service, error) {
+	if vulns == nil || len(vulns) == 0 {
+		return nil, errors.New("vulns are required")
+	}
+
+	route := fmt.Sprintf(routes.ShodanVulns, strings.Join(vulns, ","))
 	return s.subscribe(ctx, route)
 }
 
@@ -155,12 +165,9 @@ func (s *StreamClient) makeRequest(ctx context.Context, route string) (response 
 func (s *StreamClient) subscribe(ctx context.Context, route string) (chan models.Service, error) {
 	resultChan := make(chan models.Service)
 	response, err := s.makeRequest(ctx, route)
-	if err != nil {
-		return nil, err
-	}
 
-	if response.StatusCode != 200 {
-		return nil, errFromResponse(response)
+	if err = s.ResponseHook(response, err); err != nil {
+		return nil, err
 	}
 
 	go func(c chan models.Service, body io.ReadCloser) {
@@ -192,4 +199,17 @@ func (s *StreamClient) subscribe(ctx context.Context, route string) (chan models
 	}(resultChan, response.Body)
 
 	return resultChan, nil
+}
+
+// Default response hook only checks for status != 200
+func defaultResponseHook(response *http.Response, err error) error {
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode != 200 {
+		return errFromResponse(response)
+	}
+
+	return nil
 }

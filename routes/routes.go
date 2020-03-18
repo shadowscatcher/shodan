@@ -24,7 +24,6 @@ const (
 	ShodanQuery                          = "/shodan/query"
 	ShodanQuerySearch                    = "/shodan/query/search"
 	ShodanQueryTags                      = "/shodan/query/tags"
-	ShodanTagsId                         = "/shodan/tags/%s"
 	ShodanAlert                          = "/shodan/alert"
 	ShodanAlertInfo                      = "/shodan/alert/info"
 	ShodanAlertId                        = "/shodan/alert/%s"
@@ -52,6 +51,8 @@ const (
 	ShodanCountries = "/shodan/countries/%s"
 	ShodanPortsList = "/shodan/ports/%s"
 	ShodanAlerts    = "/shodan/alerts"
+	ShodanTags      = "/shodan/tags/%s"
+	ShodanVulns     = "/shodan/vulns/%s"
 
 	// notifier API routes
 	Notifier         = "/notifier"
