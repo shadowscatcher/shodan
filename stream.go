@@ -7,20 +7,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/shadowscatcher/shodan/models"
+	"github.com/shadowscatcher/shodan/routes"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
-
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
 )
 
 // StreamClient is a client with all stream-related methods. Use GetStreamClient to create instance
 type StreamClient struct {
 	apiKey string
-	mu     *sync.Mutex
 	HTTP   *http.Client
 	// StreamResponseHook allows you to intercept response before stream reading. If it returns an error, method exits
 	ResponseHook func(response *http.Response, err error) error
@@ -38,7 +35,6 @@ func GetStreamClient(key string, client *http.Client) (*StreamClient, error) {
 
 	return &StreamClient{
 		apiKey:       key,
-		mu:           &sync.Mutex{},
 		HTTP:         client,
 		ResponseHook: defaultResponseHook,
 	}, nil
