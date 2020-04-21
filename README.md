@@ -61,7 +61,7 @@ func main() {
 }
 ```
 
-- Search results contains a lot of types that are ignored by most of the existing libraries, documented where possible:
+- Search results contain a lot of types that are ignored by most of the existing libraries, documented where possible:
 
 ```go
 for _, match := range result.Matches {
