@@ -1,15 +1,28 @@
 # Shodan API for Golang
 
 Yet another one Golang implementation of Shodan REST API client. 
-This library was inspired by [Nikita Safonov](https://github.com/ns3777k/)'s [go-shodan library](https://github.com/ns3777k/go-shodan), but has different data models and query syntax to suit my own needs.
+This library inspired by [Nikita Safonov](https://github.com/ns3777k/)'s [go-shodan library](https://github.com/ns3777k/go-shodan), but has different data models and query syntax.
 
 ## Features
 
-- Library is intended to be the most comprehensive and documented out there, letting you learn about all of the API features and gathered data types. The documentation is a work in progress.
-- Search syntax allows you to change query without without string formatting:
+- Library intended to be the most comprehensive and documented out there, letting you learn about all the API methods, search filters and gathered data types. The documentation is a work in progress.
+- Search syntax allows you to change query without string formatting:
 
 ```go
-nginxSearch := search.Params{
+package main
+
+import (
+	"context"
+	"github.com/shadowscatcher/shodan"
+	"github.com/shadowscatcher/shodan/search"
+	"github.com/shadowscatcher/shodan/search/ssl_versions"
+	"log"
+	"net/http"
+	"os"
+)
+
+func main() {
+	nginxSearch := search.Params{
 		Page:1,
 		Query: search.Query{
 			Product: "nginx",
@@ -23,13 +36,29 @@ nginxSearch := search.Params{
 		},
 	}
 
-client, _ := shodan.GetClient(os.Getenv("SHODAN_API_KEY"), http.DefaultClient, true)
-ctx := context.Background()
-result, err := client.Search(ctx, nginxSearch)
-// later on you can change every part of search query or parameters:
-nginxSearch.Page++  // for example, increase page
-nginxSearch.Query.Port = 443 // or add new search term 
-result2, err := client.Search(ctx, nginxSearch)
+	client, _ := shodan.GetClient(os.Getenv("SHODAN_API_KEY"), http.DefaultClient, true)
+	ctx := context.Background()
+	result, err := client.Search(ctx, nginxSearch)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, match := range result.Matches {
+		// a lot of returned data can be used in another searches
+		// it's easy because you will get response with almost all possible fields, just don't forget to check them
+		if match.HTTP != nil && match.HTTP.Favicon != nil {
+			//newQuery := search.Query{HTTP: search.HTTP{Favicon: search.Favicon{Hash: match.HTTP.Favicon.Hash}}}
+		}
+	}
+	
+	// later on you can change every part of search query or parameters:
+	nginxSearch.Page++  // for example, increase page
+	nginxSearch.Query.Port = 443 // or add new search term
+	result, err = client.Search(ctx, nginxSearch)  // and reuse modified parameters object
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 ```
 
 - Search results contains a lot of types that are ignored by most of the existing libraries, documented where possible:
@@ -61,4 +90,4 @@ for _, match := range result.Matches {
 }
 ```
 
- - The client can be configured to automatically make one second pause between requests (this interval is required by Shodan's API terms of service).
+ - The client can be configured to automatically make one second pause between requests (this interval required by Shodan's API terms of service).
