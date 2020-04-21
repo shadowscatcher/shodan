@@ -1,5 +1,10 @@
 # Shodan API for Golang
 
+[![GoDoc](https://img.shields.io/badge/docs-pkg.go.dev-informational?logo=go&style=flat-square)](https://pkg.go.dev/github.com/shadowscatcher/shodan?tab=doc)
+![Build](https://img.shields.io/github/workflow/status/shadowscatcher/shodan/Go?style=flat-square)
+[![Go Report Card](https://goreportcard.com/badge/github.com/shadowscatcher/shodan?style=flat-square)](https://goreportcard.com/report/github.com/shadowscatcher/shodan)
+[![MIT License](https://img.shields.io/badge/license-MIT-informational.svg?style=flat-square)](LICENSE)
+
 Yet another one Golang implementation of Shodan REST API client. 
 This library inspired by [Nikita Safonov](https://github.com/ns3777k/)'s [go-shodan library](https://github.com/ns3777k/go-shodan), but has different data models and query syntax.
 
