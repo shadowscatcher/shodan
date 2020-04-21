@@ -5,11 +5,18 @@ import (
 	"github.com/shadowscatcher/shodan/search/link_types"
 	"github.com/shadowscatcher/shodan/search/ssl_versions"
 	"reflect"
+	"strings"
 )
 
 type Query struct {
 	// Raw query text. You can use only this field, if you want to
 	Text string
+
+	// Any text
+	All string `shodan_search:"all"`
+
+	// IP-address
+	IP string `shodan_search:"ip"`
 
 	// Only show results that were collected after the given date (dd/mm/yyyy).
 	After string `shodan_search:"after"`
@@ -17,7 +24,7 @@ type Query struct {
 	// The Autonomous System Number that identifies the network the device is on; ex: "AS15169"
 	ASN string `shodan_search:"asn"`
 
-	//O nly show results that were collected before the given date (dd/mm/yyyy.
+	//O nly show results that were collected before the given date (dd/mm/yyyy).
 	Before string `shodan_search:"before"`
 
 	// Show results that are located in the given city.
@@ -25,6 +32,12 @@ type Query struct {
 
 	// Show results that are located within the given country.
 	Country string `shodan_search:"country"`
+
+	// Common platform enumeration
+	CPE string `shodan_search:"cpe"`
+
+	// Device type; ex: "printer", "router"
+	Device string `shodan_search:"device"`
 
 	// There are 2 modes to the geo filter: radius and bounding box.
 	// To limit results based on a radius around a pair of latitude/longitude, provide 3 parameters; ex: geo:50,50,100.
@@ -77,11 +90,33 @@ type Query struct {
 	// If "true" only show results that have a screenshot available
 	HasScreenshot bool `shodan_search:"has_screenshot"`
 
-	SSLOpts `shodan_search:"ssl"`
-	Bitcoin `shodan_search:"bitcoin"`
-	Telnet  `shodan_search:"telnet"`
-	HTTP    `shodan_search:"http"`
-	NTP     `shodan_search:"ntp"`
+	// If "true" only show results that have SSL
+	HasSSL bool `shodan_search:"has_ssl"`
+
+	// If "true" only show results that have vulnerabilities. Enterpise only.
+	HasVuln bool `shodan_search:"has_vuln"`
+
+	// Region code
+	Region int `shodan_search:"region"`
+
+	// Host tag. Enterprise only.
+	Tag string `shodan_search:"tag"`
+
+	// signature unknown
+	Scan string `shodan_search:"scan"`
+
+	// filter by vulnerability. Only available to academic users or Small Business API subscription and higher.
+	Vuln string `shodan_search:"vuln"`
+
+	SSLOpts    `shodan_search:"ssl"`
+	Bitcoin    `shodan_search:"bitcoin"`
+	Telnet     `shodan_search:"telnet"`
+	HTTP       `shodan_search:"http"`
+	NTP        `shodan_search:"ntp"`
+	Screenshot `shodan_search:"screenshot"`
+	Shodan     `shodan_search:"shodan"`
+	SNMP       `shodan_search:"snmp"`
+	SSH        `shodan_search:"ssh"`
 }
 
 type SSLOpts struct {
@@ -93,9 +128,10 @@ type SSLOpts struct {
 
 	// Possible values: SSLv2, SSLv3, TLSv1, TLSv1.1, TLSv1.2
 	Version ssl_versions.SSLVersion `shodan_search:"version"`
-	Pubkey  Pubkey                  `shodan_search:"pubkey"`
-	Cert    CertOptions             `shodan_search:"cert"`
-	Cipher  Cipher                  `shodan_search:"cipher"`
+
+	// Various certificate options
+	Cert   CertOptions `shodan_search:"cert"`
+	Cipher Cipher      `shodan_search:"cipher"`
 }
 
 type Pubkey struct {
@@ -130,11 +166,16 @@ type CertOptions struct {
 	// Serial number as string
 	Serial string `shodan_search:"serial"`
 
+	// SHA-1 fingerprint
+	Fingerprint string `shodan_search:"fingerprint"`
+
 	// Cert issuer options
 	Issuer CertEntity `shodan_search:"issuer"`
 
 	// Cert subject options
 	Subject CertEntity `shodan_search:"subject"`
+
+	Pubkey Pubkey `shodan_search:"pubkey"`
 }
 
 type CertEntity struct {
@@ -191,6 +232,18 @@ type HTTP struct {
 
 	// Hash of the website HTML
 	HTMLHash int `shodan_search:"html_hash"`
+
+	// Hash of website favicon.ico file
+	Favicon Favicon `shodan_search:"favicon"`
+
+	// Hash of website robots.txt file
+	RobotsHash int `shodan_search:"robots_hash"`
+
+	// Search in contents of website's security.txt
+	SecurityTxt string `shodan_search:"securitytxt"`
+
+	// Search by Web Application Firewall vendor/name
+	WAF string `shodan_search:"waf"`
 }
 
 type NTP struct {
@@ -205,6 +258,38 @@ type NTP struct {
 
 	// Whether or not more IPs were available for the given NTP server.
 	More bool `shodan_search:"more"`
+}
+
+type Screenshot struct {
+	// Label of screenshot (kind of tag, like "login", "windows")
+	Label string `shodan_search:"label"`
+}
+
+type Favicon struct {
+	// Hash of website favicon.ico file
+	Hash int `shodan_search:"hash"`
+}
+
+type Shodan struct {
+	// Filter by shodan crawler module
+	Module string `shodan_search:"module"`
+}
+
+type SNMP struct {
+	// SNMP contact address
+	Contact string `shodan_search:"contact"`
+
+	// SNMP server name
+	Name string `shodan_search:"name"`
+
+	Location string `shodan_search:"location"`
+}
+
+type SSH struct {
+	// HASSH Md5 fingerprint hash
+	HASSH string `shodan_search:"hassh"`
+
+	Type string `shodan_search:"type"`
 }
 
 func (s *Query) String() string {
@@ -224,6 +309,9 @@ func marshalQueryParamField(typeField reflect.StructField, valueField reflect.Va
 	case stringType, sslVersionType, linkTypeType, explotTypeType:
 		value := valueField.String()
 		if value != "" {
+			if strings.Contains(value, " ") {
+				value = fmt.Sprintf("\"%s\"", value)
+			}
 			return fmt.Sprintf("%s:%s ", tag, value)
 		}
 	case intType:
@@ -269,5 +357,5 @@ func marshalQueryParam(v interface{}, concreteType bool, topLevelTag string) str
 		result += marshalQueryParamField(typeField, valueField, searchTag)
 	}
 
-	return result
+	return strings.Trim(result, " ")
 }
