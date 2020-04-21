@@ -14,7 +14,7 @@ const (
 
 	// The compromised tag is added to services that appear to have been compromised by an attacker.
 	// Currently, it is only being applied to NoSQL database instances that have been compromised for ransomware.
-	Compromized = "compromized"
+	Compromised = "compromised"
 
 	// The cryptocurrency tag is added to services related to crypto currencies, such as Ethereum RPC, Bitcoin
 	// and Monero.

@@ -49,11 +49,11 @@ type Service struct {
 	Transport string `json:"transport"`
 
 	// Name of the software running the service
-	// In rare ocasions can be number. Use ProductString() to get string value of Product
+	// In rare occasions can be number. Use ProductString() to get string value of Product
 	Product interface{} `json:"product,omitempty"`
 
 	// Version of the software
-	// In rare ocasions can be number. Use VersionString() to get string value of Version
+	// In rare occasions can be number. Use VersionString() to get string value of Version
 	Version interface{} `json:"version,omitempty"`
 
 	// Common platform enumeration
@@ -165,7 +165,7 @@ type Service struct {
 
 // region public methods
 
-// Product can be a string or number (in rare ocasions).
+// Product can be a string or number (in rare occasions).
 func (s *Service) ProductString() string {
 	if s.Product == nil {
 		return ""
@@ -189,7 +189,7 @@ func (s *Service) CpeList() []string {
 	}
 }
 
-// Version can be a string or number (in rare ocasions)
+// Version can be a string or number (in rare occasions)
 func (s *Service) VersionString() string {
 	if s.Version == nil {
 		return ""

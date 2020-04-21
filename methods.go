@@ -95,13 +95,13 @@ func (c *Client) Services(ctx context.Context) (result map[string]string, err er
 
 // Filters returns a list of search filters that can be used in the search query
 func (c *Client) Filters(ctx context.Context) (result []string, err error) {
-	err = c.get(ctx, routes.ShodanFilters, nil, &result)
+	err = c.get(ctx, routes.ShodanHostSearchFilters, nil, &result)
 	return
 }
 
 // Facets returns a list of facets that can be used to get a breakdown of the top values for a property
 func (c *Client) Facets(ctx context.Context) (result []string, err error) {
-	err = c.get(ctx, routes.ShodanFacets, nil, &result)
+	err = c.get(ctx, routes.ShodanHostSearchFacets, nil, &result)
 	return
 }
 
