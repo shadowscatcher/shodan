@@ -48,7 +48,9 @@ type ElasticNodeHTTP struct {
 }
 
 type ElasticIngest struct {
-	Processors []ElasticProcessor `json:"processors"`
+	Processors        []ElasticProcessor     `json:"processors"`
+	ProcessorStats    map[string]interface{} `json:"processor_stats"`
+	NumberOfPipelines int                    `json:"number_of_pipelines"`
 }
 
 type ElasticJVM struct {

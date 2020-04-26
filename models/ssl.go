@@ -56,16 +56,18 @@ type SslCert struct {
 }
 
 type SslCertComponents struct {
-	C            string `json:"C,omitempty"`
-	CN           string `json:"CN,omitempty"`
-	DC           string `json:"DC,omitempty"`
-	L            string `json:"L,omitempty"`
-	O            string `json:"O,omitempty"`
-	OU           string `json:"OU,omitempty"`
-	SN           string `json:"SN,omitempty"`
-	ST           string `json:"ST,omitempty"`
-	EmailAddress string `json:"emailAddress,omitempty"`
-	SerialNumber string `json:"serialNumber,omitempty"`
+	C                   string `json:"C,omitempty"`
+	CN                  string `json:"CN,omitempty"`
+	DC                  string `json:"DC,omitempty"`
+	L                   string `json:"L,omitempty"`
+	O                   string `json:"O,omitempty"`
+	OU                  string `json:"OU,omitempty"`
+	SN                  string `json:"SN,omitempty"`
+	ST                  string `json:"ST,omitempty"`
+	EmailAddress        string `json:"emailAddress,omitempty"`
+	SerialNumber        string `json:"serialNumber,omitempty"`
+	UnstructuredName    string `json:"unstructuredName,omitempty"`
+	UnstructuredAddress string `json:"unstructuredAddress,omitempty"`
 }
 
 type SslCipher struct {

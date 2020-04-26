@@ -161,6 +161,15 @@ type Service struct {
 
 	// Availability: Devices running the VertX/Edge door controllers
 	Vertx *services.Vertx `json:"vertx,omitempty"`
+
+	// Availability: Devices running the Minecraft game server
+	Minecraft *services.Minecraft `json:"minecraft"`
+
+	// Availability: Devices running InfluxDB time-series database
+	InfluxDb *services.InfluxDb `json:"influx_db"`
+
+	// Availability: Devices running CoAP IoT protocol service
+	CoAP *services.CoAP `json:"coap"`
 }
 
 // region public methods

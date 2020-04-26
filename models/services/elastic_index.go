@@ -30,12 +30,14 @@ type ElasticCompletion struct {
 type ElasticNodeCount struct {
 	Client           int `json:"client,omitempty"`
 	CoordinatingOnly int `json:"coordinating_only,omitempty"`
+	VotingOnly       int `json:"voting_only,omitempty"`
 	Data             int `json:"data,omitempty"`
 	DataOnly         int `json:"data_only,omitempty"`
 	Ingest           int `json:"ingest,omitempty"`
 	Master           int `json:"master,omitempty"`
 	MasterData       int `json:"master_data,omitempty"`
 	MasterOnly       int `json:"master_only,omitempty"`
+	ML               int `json:"ml"`
 	Total            int `json:"total"`
 }
 
@@ -147,14 +149,17 @@ type ElasticNetworkTypes struct {
 }
 
 type ElasticNodes struct {
-	Count        ElasticNodeCount    `json:"count"`
-	FS           ElasticFS           `json:"fs"`
-	JVM          ElasticJVMdata      `json:"jvm"`
-	NetworkTypes ElasticNetworkTypes `json:"network_types,omitempty"`
-	OS           ElasticOS           `json:"os"`
-	Plugins      []ElasticPlugin     `json:"plugins,omitempty"`
-	Process      ElasticProcess      `json:"process"`
-	Versions     []string            `json:"versions"`
+	Count          ElasticNodeCount       `json:"count"`
+	FS             ElasticFS              `json:"fs"`
+	JVM            ElasticJVMdata         `json:"jvm"`
+	NetworkTypes   ElasticNetworkTypes    `json:"network_types,omitempty"`
+	OS             ElasticOS              `json:"os"`
+	Plugins        []ElasticPlugin        `json:"plugins,omitempty"`
+	Process        ElasticProcess         `json:"process"`
+	Versions       []string               `json:"versions"`
+	Ingest         ElasticIngest          `json:"ingest,omitempty"`
+	PackagingTypes []PackagingType        `json:"packaging_types"`
+	DiscoveryTypes map[string]interface{} `json:"discovery_types"`
 }
 
 type ElasticOpenFileDescriptors struct {
@@ -210,10 +215,17 @@ type ElasticSegments struct {
 	StoredFieldsMemoryInBytes   int                    `json:"stored_fields_memory_in_bytes,omitempty"`
 	TermVectorsMemoryInBytes    int                    `json:"term_vectors_memory_in_bytes,omitempty"`
 	TermsMemoryInBytes          int                    `json:"terms_memory_in_bytes,omitempty"`
+	TermsOffheapMemoryInBytes   int                    `json:"terms_offheap_memory_in_bytes,omitempty"`
 	VersionMapMemoryInBytes     int                    `json:"version_map_memory_in_bytes"`
 }
 
 type ElasticStore struct {
 	SizeInBytes          int `json:"size_in_bytes"`
 	ThrottleTimeInMillis int `json:"throttle_time_in_millis,omitempty"`
+}
+
+type PackagingType struct {
+	Count  int    `json:"count"`
+	Flavor string `json:"flavor"`
+	Type   string `json:"type"`
 }

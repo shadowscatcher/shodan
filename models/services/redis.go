@@ -26,8 +26,9 @@ type Redis struct {
 	Replication map[string]interface{} `json:"replication,omitempty"`
 
 	// General information about the service
-	Server RedisServer `json:"server"`
-	SSL    *RedisSSL   `json:"ssl,omitempty"`
+	Server        RedisServer        `json:"server"`
+	SSL           *RedisSSL          `json:"ssl,omitempty"`
+	OomPrevention RedisOomPrevention `json:"oom-prevention"`
 
 	// Miscellaneous statistics and usage information
 	Stats map[string]interface{} `json:"stats,omitempty"`
@@ -79,4 +80,20 @@ type RedisSSL struct {
 	SSLCurrentCertificateNotBeforeDate  string `json:"ssl_current_certificate_not_before_date"`
 	SSLCurrentCertificateSerial         int    `json:"ssl_current_certificate_serial"`
 	SSLEnabled                          string `json:"ssl_enabled"`
+}
+
+type RedisOomPrevention struct {
+	On                                 string `json:"oom_prevention_on"`
+	PeakUsedMemoryTotal                uint64 `json:"peak_used_memory_total"`
+	PreventionThreshold                uint64 `json:"oom_prevention_threshold"`
+	UsedMemoryRdb                      uint64 `json:"used_memory_rdb"`
+	UsedMemoryAof                      uint64 `json:"used_memory_aof"`
+	UsedMemoryTotal                    uint64 `json:"used_memory_total"`
+	CurrentUsecondsWithOomPreventionOn uint64 `json:"current_useconds_with_oom_prevention_on"`
+	TotalUsecondsWithOomPreventionOn   uint64 `json:"total_useconds_with_oom_prevention_on"`
+	ThresholdHuman                     string `json:"oom_prevention_threshold_human"`
+	UsedMemoryRdbHuman                 string `json:"used_memory_rdb_human"`
+	UsedMemoryAofHuman                 string `json:"used_memory_aof_human"`
+	UsedMemoryTotalHuman               string `json:"used_memory_total_human"`
+	PeakUsedMemoryTotalHuman           string `json:"peak_used_memory_total_human"`
 }
