@@ -1,6 +1,9 @@
 package services
 
 type Monero struct {
+	Credits uint64 `json:"credits"`
+	TopHash string `json:"top_hash"`
+
 	// Number of alternative blocks to main chain
 	AltBlocksCount         int    `json:"alt_blocks_count"`
 	BlockSizeLimit         int    `json:"block_size_limit"`

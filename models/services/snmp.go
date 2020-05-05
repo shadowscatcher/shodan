@@ -12,4 +12,12 @@ type SNMP struct {
 
 	// Name given to the device by the owner
 	Name *string `json:"name"`
+
+	Uptime       string `json:"uptime"`
+	ObjectId     string `json:"objectid"`
+	Services     string `json:"services"`
+	OrLastChange string `json:"orlastchange"`
+	OrDescr      string `json:"ordescr"`
+	OrUptime     string `json:"oruptime"`
+	OrId         string `json:"orid"`
 }

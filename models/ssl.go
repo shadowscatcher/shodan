@@ -42,17 +42,17 @@ type SslAcceptableCA struct {
 }
 
 type SslCert struct {
-	Expired     bool              `json:"expired"`
-	Expires     string            `json:"expires"`
-	Extensions  []SslExtension    `json:"extensions"`
-	Fingerprint SslFingerprint    `json:"fingerprint"`
-	Issued      string            `json:"issued"`
-	Issuer      SslCertComponents `json:"issuer"`
-	Pubkey      Pubkey            `json:"pubkey"`
-	Serial      json.Number       `json:"serial,Number"`
-	SigAlg      string            `json:"sig_alg"`
-	Subject     SslSubject        `json:"subject"`
-	Version     int               `json:"version"`
+	Expired     bool           `json:"expired"`
+	Expires     string         `json:"expires"`
+	Extensions  []SslExtension `json:"extensions"`
+	Fingerprint SslFingerprint `json:"fingerprint"`
+	Issued      string         `json:"issued"`
+	Issuer      SslIssuer      `json:"issuer"`
+	Pubkey      Pubkey         `json:"pubkey"`
+	Serial      json.Number    `json:"serial,Number"`
+	SigAlg      string         `json:"sig_alg"`
+	Subject     SslSubject     `json:"subject"`
+	Version     int            `json:"version"`
 }
 
 type SslCertComponents struct {
@@ -106,6 +106,19 @@ type SslSubject struct {
 	JurisdictionSt   string `json:"jurisdictionST,omitempty"`
 	PostalCode       string `json:"postalCode,omitempty"`
 	Street           string `json:"street,omitempty"`
+}
+
+type SslIssuer struct {
+	SslCertComponents
+	Name                string `json:"name,omitempty"`
+	UID                 string `json:"UID,omitempty"`
+	DNQualifier         string `json:"dnQualifier,omitempty"`
+	SubjectAltName      string `json:"subjectAltName,omitempty"`
+	UnstructuredName    string `json:"unstructuredName,omitempty,omitempty"`
+	UnstructuredAddress string `json:"unstructuredAddress,omitempty,omitempty"`
+	PostalCode          string `json:"postalCode,omitempty,omitempty"`
+	Street              string `json:"street,omitempty,omitempty"`
+	Undef               string `json:"UNDEF,omitempty"`
 }
 
 type SslTlsExt struct {

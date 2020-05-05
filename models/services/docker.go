@@ -28,6 +28,8 @@ type Docker struct {
 	// Minimum API version the server supports
 	MinApiversion string `json:"MinAPIVersion,omitempty"`
 
+	EulerVersion string `json:"EulerVersion,omitempty"`
+
 	// Host operating system
 	OS         string         `json:"Os"`
 	PkgVersion string         `json:"PkgVersion,omitempty"`
