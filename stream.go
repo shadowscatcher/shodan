@@ -7,12 +7,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/shadowscatcher/shodan/models"
+	"github.com/shadowscatcher/shodan/routes"
 )
 
 // StreamClient is a client with all stream-related methods. Use GetStreamClient to create instance
@@ -87,7 +88,7 @@ func (s *StreamClient) Ports(ctx context.Context, ports []int) (chan models.Serv
 
 // Alerts stream allows to subscribe to banners discovered on all IP ranges described in the network alert
 func (s *StreamClient) Alerts(ctx context.Context) (chan models.Service, error) {
-	return s.subscribe(ctx, routes.ShodanAlerts)
+	return s.subscribe(ctx, routes.ShodanAlert)
 }
 
 // Alert stream allows to subscribe to banners discovered on the IP range defined in a specific network alert
