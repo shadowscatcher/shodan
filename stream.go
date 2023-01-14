@@ -12,8 +12,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
+	"github.com/denisgubin/shodan/models"
+	"github.com/denisgubin/shodan/routes"
 )
 
 // StreamClient is a client with all stream-related methods. Use GetStreamClient to create instance
