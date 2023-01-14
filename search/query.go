@@ -2,8 +2,8 @@ package search
 
 import (
 	"fmt"
-	"github.com/shadowscatcher/shodan/search/link_types"
-	"github.com/shadowscatcher/shodan/search/ssl_versions"
+	"github.com/denisgubin/shodan/search/link_types"
+	"github.com/denisgubin/shodan/search/ssl_versions"
 	"reflect"
 	"strings"
 )

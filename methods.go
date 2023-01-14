@@ -10,9 +10,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
-	"github.com/shadowscatcher/shodan/search"
+	"github.com/denisgubin/shodan/models"
+	"github.com/denisgubin/shodan/routes"
+	"github.com/denisgubin/shodan/search"
 )
 
 var errEmptyParams = errors.New("empty parameters")

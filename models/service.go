@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"github.com/shadowscatcher/shodan/models/services"
+	"github.com/denisgubin/shodan/models/services"
 )
 
 // Service from search results

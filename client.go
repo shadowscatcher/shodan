@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/shadowscatcher/shodan/models"
-	"github.com/shadowscatcher/shodan/routes"
+	"github.com/denisgubin/shodan/models"
+	"github.com/denisgubin/shodan/routes"
 
 	"sync"
 	"time"
