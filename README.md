@@ -1,16 +1,16 @@
 # Shodan API for Golang
 
 [![GoDoc](https://img.shields.io/badge/docs-pkg.go.dev-informational?logo=go&style=flat-square)](https://pkg.go.dev/github.com/shadowscatcher/shodan?tab=doc)
-![Build](https://img.shields.io/github/workflow/status/shadowscatcher/shodan/Go?style=flat-square)
+![Build](https://img.shields.io/github/actions/workflow/status/shadowscatcher/shodan/go.yml?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/shadowscatcher/shodan?style=flat-square)](https://goreportcard.com/report/github.com/shadowscatcher/shodan)
 [![MIT License](https://img.shields.io/badge/license-MIT-informational.svg?style=flat-square)](LICENSE)
 
 Yet another one Golang implementation of Shodan REST API client. 
-This library inspired by [Nikita Safonov](https://github.com/ns3777k/)'s [go-shodan library](https://github.com/ns3777k/go-shodan), but has different data models and query syntax.
+This library is inspired by amazing [Nikita Safonov](https://github.com/ns3777k/)'s [go-shodan library](https://github.com/ns3777k/go-shodan), but has different data models and query syntax.
 
 ## Features
 
-- Library intended to be the most comprehensive and documented out there, letting you learn about all the API methods, search filters and gathered data types. The documentation is a work in progress.
+- Library intended to be the most comprehensive and documented out there, letting you learn about all the API methods, search filters and gathered data types using method/model comments in this repo
 - Search syntax allows you to change query without string formatting:
 
 ```go
