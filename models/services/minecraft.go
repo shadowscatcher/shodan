@@ -1,13 +1,16 @@
 package services
 
+import "encoding/json"
+
 type Minecraft struct {
-	Version     MinecraftServerVersion `json:"version"`
-	Players     MinecraftPlayersInfo   `json:"players"`
-	ForgeData   MinecraftForgeInfo     `json:"forgeData"`
-	ModInfo     MinecraftModInfo       `json:"modinfo,omitempty"`
-	Description string                 `json:"description"`
-	Favicon     string                 `json:"favicon,omitempty"`
-	Whitelisted bool                   `json:"whitelisted,omitempty"`
+	Version   MinecraftServerVersion `json:"version"`
+	Players   MinecraftPlayersInfo   `json:"players"`
+	ForgeData MinecraftForgeInfo     `json:"forgeData"`
+	ModInfo   MinecraftModInfo       `json:"modinfo,omitempty"`
+	// Description is a string or a MinecraftDescription
+	Description json.RawMessage `json:"description"`
+	Favicon     string          `json:"favicon,omitempty"`
+	Whitelisted bool            `json:"whitelisted,omitempty"`
 }
 
 type MinecraftServerVersion struct {
@@ -50,4 +53,9 @@ type ModInfoItem struct {
 type MinecraftPlayer struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
+}
+
+type MinecraftDescription struct {
+	Text  string                   `json:"text"`
+	Extra []map[string]interface{} `json:"extra,omitempty"`
 }
