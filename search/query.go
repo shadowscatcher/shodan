@@ -97,7 +97,7 @@ type Query struct {
 	HasVuln bool `shodan_search:"has_vuln"`
 
 	// Region code
-	Region int `shodan_search:"region"`
+	Region string `shodan_search:"region"`
 
 	// Host tag. Enterprise only.
 	Tag string `shodan_search:"tag"`
